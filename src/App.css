@@ -1,0 +1,198 @@
+@font-face {
+    font-family: "Staatliches";
+    src: url(./fonts/Staatliches-Regular.ttf);
+  }
+
+.a{color: #E7484F}
+.b{color: #F68B1D}
+.c{color: #FCED00}
+.d{color: #009E4F}
+.e{color: #00AAC3}
+.f{color:  #732982}
+
+.rainbow{
+    background-color: #343A40;
+    border-radius: 4px;  
+    color: #fff;
+    cursor: pointer;
+    padding: 8px 16px;
+    
+  }
+  
+  .rainbow-1:hover{
+     background-image: linear-gradient(90deg, #00C0FF 0%, #FFCF00 49%, #FC4F4F 80%, #00C0FF 100%);
+     border: 1px solid linear-gradient(90deg, #00C0FF 0%, #FFCF00 49%, #FC4F4F 80%, #00C0FF 100%) !important;
+     animation:slidebg 5s linear infinite;
+  }
+
+.App {
+    text-align: center;
+}
+
+.App-logo {
+    width: 40vw;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .App-logo {
+        transition: all 200ms ease-in-out;
+        overflow: hidden;
+        display: inline-block;
+        margin-bottom: 20px;
+    }
+
+    .App-logo:hover {
+        transform: scale(1.01);
+    }
+
+    .App-logo:after {
+        content: "";
+        position: absolute;
+          top: -50%;
+        left: -60%;
+        width: 20%;
+        height: 200%;
+        opacity: 0;
+        transform: rotate(30deg);
+      
+        background: rgba(255, 255, 255, 0.13);
+        background: linear-gradient(
+          to right,
+          rgba(255, 255, 255, 0.13) 0%,
+          rgba(255, 255, 255, 0.13) 77%,
+          rgba(255, 255, 255, 0.5) 92%,
+          rgba(255, 255, 255, 0.0) 100%
+        );
+      }
+      
+      /* Hover state - trigger effect */
+      .App-logo:hover:after {
+        opacity: 1;
+        left: 130%;
+        transition-property: left, top, opacity;
+        transition-duration: 0.7s, 0.7s, 0.15s;
+        transition-timing-function: ease;
+      }
+      
+      /* Active state */
+      .App-logo:active:after {
+        opacity: 0;
+      }
+}
+
+.logo-wrapper {
+    width: fit-content;
+    height: auto;
+}
+
+.App-header {
+    min-height: 100vh;
+    overflow: scroll;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(10px + 2vmin);
+    color: white;
+}
+
+@media (max-width: 768px) {
+    .socials a {
+        padding: 5vw !important;
+    }
+
+    .connect-wallet-button {
+        font-size: 1.2em !important;
+    }
+
+    .App-logo {
+        width: 75vw;
+    }
+}
+
+
+  
+
+.App-link {
+    color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+#tsparticles {
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    left: 0;
+    top: 0;
+    z-index: -1;
+}
+
+.socials {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.socials a {
+    margin: 2vw;
+}
+
+.social-link {
+    transition: all 500ms ease-in-out;
+}
+
+.social-link:hover {
+    transform: scale(1.1) !important;
+}
+
+.coming-soon-text {
+    font-family: Staatliches;
+}
+
+.coming-soon-text a {
+    color: cyan;
+    text-decoration: none;
+}
+
+.countdown-text {
+    font-size: 3em;
+    margin-bottom: 20px;
+    font-family: Staatliches;
+}
+
+.connect-wallet-button {
+    background-color: transparent;
+    border: 1px solid white;
+    height: 2em;
+    vertical-align: center;
+    border-radius: 10px;
+    color: white;
+    padding: 0px 20px;
+    font-size: 0.75em;
+    transition: all 500ms ease-in-out;
+    font-family: Staatliches;
+}
+
+@keyframes slidebg {
+    to {
+      background-position:20vw;
+    }
+  }
+
+.account-connected {
+    position: absolute;
+    top: 5px;
+    right: 15px;
+    font-size: 1em;
+    font-family: Staatliches;
+}
