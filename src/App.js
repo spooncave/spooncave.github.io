@@ -2,7 +2,7 @@ import React from 'react';
 import Particles from "react-tsparticles";
 import './App.css';
 import particlesOptions from "./particles.json";
-import { FaTwitter, FaDiscord } from "react-icons/fa";
+import { FaTwitter, FaDiscord, FaWatchmanMonitoring } from "react-icons/fa";
 import Countdown from 'react-countdown';
 import Image from 'react-graceful-image';
 import {ethers, utils, formatUnits, commify} from "ethers";
@@ -105,15 +105,15 @@ function App() {
                         await library.providersendAsync({
                             method: 'wallet_addEthereumChain',
                             params: [{
-                                chainId: '0x89', // 0x89
-                                rpcUrl: 'https://polygon-rpc.com',
-                                chainName: 'Polygon',
+                                chainId: '0x13881', // 0x89
+                                rpcUrl: 'https://rpc-mumbai.maticvigil.com/', // https://polygon-rpc.com
+                                chainName: 'Polygon Testnet', // Polygon
                                 nativeCurrency: {
                                     name: 'MATIC',
                                     symbol: 'MATIC', // 2-6 characters long
                                     decimals: 18,
                                 },
-                                blockExplorerUrl: 'https://polygonscan.com/',
+                                blockExplorerUrl: 'https://mumbai.polygonscan.com/',
                             }]
                         });
                     } catch (addError) {
@@ -135,8 +135,12 @@ function App() {
                 return "Wrong Network";
             }
         } else if (account) {
-            if (saleIsActive) {
+            if (saleIsActive && mintState == 1) {
                 return "Mint";
+            } else if (saleIsActive && mintState == 1) {
+                return "Minting..."
+            } else if (saleIsActive && mintState == 2) {
+                return "Minted! Want Another?"
             } else {
                 return "Minting Soon!";
             }
