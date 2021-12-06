@@ -23,6 +23,7 @@ function App() {
     const [mintState, setMintState] = React.useState(0);
     const [maxSupply, setMaxSupply] = React.useState(10000);
     const [mintPrice, setMintPrice] = React.useState(0);
+    const [ownedTokens, setOwnedTokens] = React.useState(0);
     const [saleIsActive, setSaleIsActive] = React.useState(false);
     const nftInterface = new Interface(NFTABI);
     const nftContract = new Contract('0x8654DB913F77F7861682f7DC13a0D7fe2aCA4e14', NFTABI);
@@ -30,6 +31,7 @@ function App() {
     const getMaxSupply = { abi: nftInterface, address: '0x8654DB913F77F7861682f7DC13a0D7fe2aCA4e14', method: 'maxSupply', args: [] };
     const getMintPrice = { abi: nftInterface, address: '0x8654DB913F77F7861682f7DC13a0D7fe2aCA4e14', method: 'tokenPrice', args: [] };
     const getSaleIsActive = { abi: nftInterface, address: '0x8654DB913F77F7861682f7DC13a0D7fe2aCA4e14', method: 'saleIsActive', args: [] };
+    const getOwnedTokens = { abi: nftInterface, address: '0x8654DB913F77F7861682f7DC13a0D7fe2aCA4e14', method: 'tokensOfOwner', args: [account] };
     const mintFunction = useContractFunction(
         nftContract,
         'mintToken',
@@ -43,19 +45,22 @@ function App() {
             console.log('error while minting. or after minting. idk.');
     };
 
-    const [rawTotalSupply, rawMaxSupply, rawMintPrice, rawSaleIsActive] = useContractCalls([
+    const [rawTotalSupply, rawMaxSupply, rawMintPrice, rawSaleIsActive, rawOwnedTokens] = useContractCalls([
         getTotalSupply,
         getMaxSupply,
         getMintPrice,
-        getSaleIsActive
+        getSaleIsActive,
+        getOwnedTokens
     ]);
 
     React.useEffect(() => {
         setCurrentSupply(BigNumber.from(rawTotalSupply?.[0] ?? 0).toString());
         setMaxSupply(BigNumber.from(rawMaxSupply?.[0] ?? 10000).toString());
-        setMintPrice(BigNumber.from(rawMintPrice?.[0] ?? 0));
+        setMintPrice(BigNumber.from(rawMintPrice?.[0] ?? 0).toString());
         setSaleIsActive(rawSaleIsActive?.[0]);
-    }, [rawTotalSupply, rawMaxSupply, rawMintPrice, rawSaleIsActive])
+        console.log(rawOwnedTokens);
+        setOwnedTokens((rawOwnedTokens?.[0]?.length ?? 0).toString());
+    }, [rawTotalSupply, rawMaxSupply, rawMintPrice, rawSaleIsActive, rawOwnedTokens])
 
     React.useEffect(() => {
         if (mintFunction.state.status !== undefined) {
@@ -92,11 +97,11 @@ function App() {
     }, []);
 
     async function handleButton() {
-        if (chainId !== 80001) { //137
+        if (chainId !== 137) { 
             try {
                 await library.provider.sendAsync({
                     method: 'wallet_switchEthereumChain',
-                    params: [{chainId: '0x13881'}], //0x89
+                    params: [{chainId: '0x89'}], //0x89
                 });
             } catch (switchError) {
                 console.log(switchError);
@@ -105,15 +110,15 @@ function App() {
                         await library.providersendAsync({
                             method: 'wallet_addEthereumChain',
                             params: [{
-                                chainId: '0x13881', // 0x89
-                                rpcUrl: 'https://rpc-mumbai.maticvigil.com/', // https://polygon-rpc.com
-                                chainName: 'Polygon Testnet', // Polygon
+                                chainId: '0x89', // 0x89
+                                rpcUrl: 'https://polygon-rpc.com', // https://polygon-rpc.com
+                                chainName: 'Polygon', // Polygon
                                 nativeCurrency: {
                                     name: 'MATIC',
                                     symbol: 'MATIC', // 2-6 characters long
                                     decimals: 18,
                                 },
-                                blockExplorerUrl: 'https://mumbai.polygonscan.com/',
+                                blockExplorerUrl: 'https://polygonscan.com/',
                             }]
                         });
                     } catch (addError) {
@@ -128,7 +133,7 @@ function App() {
     }
 
     function getConnectButtonName() {
-        if (account && (chainId !== 80001)) { //137
+        if (account && (chainId !== 137)) { //137
             if (windowSize < 600) {
                 return "Wrong N/W";
             } else {
@@ -182,6 +187,7 @@ function App() {
                         }
                     <a href="https://twitter.com/spooncave_nft"><div className="social-link"><FaTwitter color="white" size="40px"/></div></a>
                 </span>
+                {account && <div className="coming-soon-text">Cost goes up by 1 MATIC every 100 mints. Current Mint Price: {mintPrice}. <br/>You have {ownedTokens} SpoonCaves in your wallet!</div>}
             </header>
             
         </div>
