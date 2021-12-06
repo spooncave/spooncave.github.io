@@ -23,6 +23,7 @@ function App() {
     const [mintState, setMintState] = React.useState(0);
     const [maxSupply, setMaxSupply] = React.useState(10000);
     const [mintPrice, setMintPrice] = React.useState(0);
+    const [mintPriceToSend, setMintPriceToSend] = React.useState(0);
     const [ownedTokens, setOwnedTokens] = React.useState(0);
     const [saleIsActive, setSaleIsActive] = React.useState(false);
     const nftInterface = new Interface(NFTABI);
@@ -40,7 +41,7 @@ function App() {
 
     const mintToken = numTokens => {
             mintFunction.send(BigNumber.from(numTokens), {
-                value: mintPrice.toString()
+                value: mintPriceToSend.toString()
             });
             console.log('error while minting. or after minting. idk.');
     };
@@ -56,7 +57,8 @@ function App() {
     React.useEffect(() => {
         setCurrentSupply(BigNumber.from(rawTotalSupply?.[0] ?? 0).toString());
         setMaxSupply(BigNumber.from(rawMaxSupply?.[0] ?? 10000).toString());
-        setMintPrice(BigNumber.from(rawMintPrice?.[0] ?? 0).toString());
+        setMintPrice(utils.formatEther(BigNumber.from(rawMintPrice?.[0] ?? 0)).toString());
+        setMintPriceToSend(BigNumber.from(rawMintPrice?.[0] ?? 0));
         setSaleIsActive(rawSaleIsActive?.[0]);
         setOwnedTokens((rawOwnedTokens?.[0]?.length ?? 0).toString());
     }, [rawTotalSupply, rawMaxSupply, rawMintPrice, rawSaleIsActive, rawOwnedTokens])
