@@ -42,10 +42,14 @@ function App() {
     );
 
     const mintToken = numTokens => {
+        try {
             mintFunction.send(BigNumber.from(numTokens), {
                 value: mintPriceToSend.toString()
             });
+        } catch (error) {
             console.log('error while minting. or after minting. idk.');
+            console.log(error ?? "");
+        }
     };
 
     React.useEffect(() => {
@@ -75,10 +79,15 @@ function App() {
 
     React.useEffect(() => {
         if (mintFunction.state.status !== undefined) {
+            console.log(mintFunction.state);
             if (mintFunction.state.status === 'Mining') {
                 setMintState(1);
             } else if (mintFunction.state.status === 'Success') {
                 setMintState(2);
+            } else if (mintFunction.state.status === 'Exception' && mintFunction.state.errorMessage?.includes('insufficient funds')) {
+                setMintState(3);
+            } else if (mintFunction.state.status === 'Exception' && mintFunction.state.errorMessage?.includes('User denied')) {
+                setMintState(4);
             } else {
                 setMintState(0);
             }
@@ -157,6 +166,10 @@ function App() {
                 setButtonText("Minting...");
             } else if (saleIsActive && mintState == 2) {
                 setButtonText("Minted! Want Another?");
+            } else if (saleIsActive && mintState == 3) {
+                setButtonText("Insufficient Funds. Try Again?")
+            } else if (saleIsActive && mintState == 4) {
+                setButtonText("TX Rejected. Try Again?")
             } else {
                 setButtonText("Minting Soon!");
             }
