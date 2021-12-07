@@ -17,6 +17,7 @@ const NFTABI = [{"inputs":[],"stateMutability":"nonpayable","type":"constructor"
 
 function App() {
     const stopTime = '2021-12-07T00:00:00';
+    const [CA, setCA] = React.useState('0x576763FdF5aAbEE12C0587612d714813B6E3A1Ec');
     const {chainId, activateBrowserWallet, account, library, activate, deactivate} = useEthers();
     const [windowSize, setWindowSize] = React.useState(false);
     const [currentSupply, setCurrentSupply] = React.useState(0);
@@ -27,12 +28,13 @@ function App() {
     const [ownedTokens, setOwnedTokens] = React.useState(0);
     const [saleIsActive, setSaleIsActive] = React.useState(false);
     const nftInterface = new Interface(NFTABI);
-    const nftContract = new Contract('0x8654DB913F77F7861682f7DC13a0D7fe2aCA4e14', NFTABI);
-    const getTotalSupply = { abi: nftInterface, address: '0x8654DB913F77F7861682f7DC13a0D7fe2aCA4e14', method: 'totalSupply', args: [] };
-    const getMaxSupply = { abi: nftInterface, address: '0x8654DB913F77F7861682f7DC13a0D7fe2aCA4e14', method: 'maxSupply', args: [] };
-    const getMintPrice = { abi: nftInterface, address: '0x8654DB913F77F7861682f7DC13a0D7fe2aCA4e14', method: 'tokenPrice', args: [] };
-    const getSaleIsActive = { abi: nftInterface, address: '0x8654DB913F77F7861682f7DC13a0D7fe2aCA4e14', method: 'saleIsActive', args: [] };
-    const getOwnedTokens = { abi: nftInterface, address: '0x8654DB913F77F7861682f7DC13a0D7fe2aCA4e14', method: 'tokensOfOwner', args: [account] };
+    const [buttonText, setButtonText] = React.useState("Connect");
+    const nftContract = new Contract(CA, NFTABI);
+    const getTotalSupply = { abi: nftInterface, address: CA, method: 'totalSupply', args: [] };
+    const getMaxSupply = { abi: nftInterface, address: CA, method: 'maxSupply', args: [] };
+    const getMintPrice = { abi: nftInterface, address: CA, method: 'tokenPrice', args: [] };
+    const getSaleIsActive = { abi: nftInterface, address: CA, method: 'saleIsActive', args: [] };
+    const getOwnedTokens = { abi: nftInterface, address: CA, method: 'tokensOfOwner', args: [account] };
     const mintFunction = useContractFunction(
         nftContract,
         'mintToken',
@@ -45,6 +47,14 @@ function App() {
             });
             console.log('error while minting. or after minting. idk.');
     };
+
+    React.useEffect(() => {
+        if (chainId === 80001) {
+            setCA('0x1c80eE9c3A8409C427D24Bb35C5BA4B39920aF50');
+        } else {
+            setCA('0x576763FdF5aAbEE12C0587612d714813B6E3A1Ec');
+        }
+    }, [chainId]);
 
     const [rawTotalSupply, rawMaxSupply, rawMintPrice, rawSaleIsActive, rawOwnedTokens] = useContractCalls([
         getTotalSupply,
@@ -133,27 +143,27 @@ function App() {
         }
     }
 
-    function getConnectButtonName() {
+    React.useEffect(() =>{
         if (account && (![137, 80001].includes(chainId))) { //137
             if (windowSize < 600) {
-                return "Wrong N/W";
+                setButtonText("Wrong N/W");
             } else {
-                return "Wrong Network";
+                setButtonText("Wrong Network");
             }
         } else if (account) {
             if (saleIsActive && mintState == 0) {
-                return "Mint";
+                setButtonText("Mint");
             } else if (saleIsActive && mintState == 1) {
-                return "Minting..."
+                setButtonText("Minting...");
             } else if (saleIsActive && mintState == 2) {
-                return "Minted! Want Another?"
+                setButtonText("Minted! Want Another?");
             } else {
-                return "Minting Soon!";
+                setButtonText("Minting Soon!");
             }
         } else {
-            return "Connect";
+            setButtonText("Connect");
         }
-    }
+    }, [account, chainId, saleIsActive, mintState])
 
     return (
         <div className="App">
@@ -183,7 +193,7 @@ function App() {
                             className={`connect-wallet-button rainbow rainbow-1`}>
                             <span
                                 className="theme-gradient ellipses"
-                                onClick={handleButton}>{getConnectButtonName()}</span>
+                                onClick={handleButton}>{buttonText}</span>
                         </button>
                         }
                     <a href="https://twitter.com/spooncave_nft"><div className="social-link"><FaTwitter color="white" size="40px"/></div></a>
