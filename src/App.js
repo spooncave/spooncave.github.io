@@ -202,12 +202,11 @@ function App() {
                             onClick={connectAccount}>Connect Wallet</button>
                         }
                         {account &&
-                        <button
+                        <a target="_blank" href="https://opensea.io/collection/spooncave"><button
                             className={`connect-wallet-button rainbow rainbow-1`}>
                             <span
-                                className="theme-gradient ellipses"
-                                onClick={handleButton}>{buttonText}</span>
-                        </button>
+                                className="theme-gradient ellipses">Trade on OpenSea</span>
+                        </button></a>
                         }
                     <a href="https://twitter.com/spooncave_nft"><div className="social-link"><FaTwitter color="white" size="40px"/></div></a>
                 </span>
